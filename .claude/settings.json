@@ -2,8 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(make:*)",
-      "Bash(go*)",
-      "Bash(pnpm*)",
+      "Bash(go *)",
+      "Bash(pnpm *)",
       "Edit(./**)",
       "Write(./**)"
     ],
