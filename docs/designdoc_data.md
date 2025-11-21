@@ -26,7 +26,7 @@ This section outlines the schema for Cloud SQL (PostgreSQL) and the management o
 | `place_name` | STRING | | Human-readable place name. |
 | `timezone` | STRING | | Olson TZ for calendar display consistency. |
 | `created_at` | TIMESTAMP | NOT NULL, DEFAULT now() | For calendar sorting. |
-| `updated_at` | TIMESTAMP | NOT NULL | For edits.
+| `updated_at` | TIMESTAMP | NOT NULL | For edits. |
 
 **Indexes:**
 * `diaries(user_id)` and `diaries(user_id, created_at)` to speed calendar views.
@@ -41,7 +41,7 @@ This table is crucial for the AI's personalization mechanism.
 | `style_fragment`| TEXT | NOT NULL | User's style sample (full corrected text or extracted summary). |
 | `timestamp` | TIMESTAMP | NOT NULL | For freshness management. |
 | `created_at` | TIMESTAMP | NOT NULL, DEFAULT now() | Creation time. |
-| `updated_at` | TIMESTAMP | NOT NULL | For edits.
+| `updated_at` | TIMESTAMP | NOT NULL | For edits. |
 
 **Constraints/Indexes:**
 * Unique on `(user_id, language_code, timestamp)` to prevent duplicate inserts.
