@@ -14,3 +14,13 @@ variable "app_name" {
   type        = string
   default     = "diarlies"
 }
+
+variable "github_org" {
+  description = "GitHub organization or username for workload identity."
+  type        = string
+}
+
+variable "github_repo" {
+  description = "GitHub repository name for workload identity."
+  type        = string
+}
