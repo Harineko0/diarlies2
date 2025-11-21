@@ -52,8 +52,8 @@ The system must orchestrate multiple steps and models to generate the final diar
 
 | ID | Feature | Requirements |
 | :--- | :--- | :--- |
-| **R2.1** | **Diary Text Generation** | Gemini 2.5 Flash generates the full diary text based on the user's input, location, and preferred writing style (R1.5). Response target is under 3 seconds; no special handling is required if it runs longer. |
-| **R2.2** | **Picture Generation** | Gemini 3 Pro Image Preview generates **multiple picture patterns** based on the generated text (R2.1) and the selected art style (R1.5). Target render time is under 10 seconds; if the primary model errors, fall back to **gemini-2.5-flash-image**. Latency alone does not trigger fallback. |
+| **R2.1** | **Diary Text Generation** | Gemini 2.5 Flash generates the full diary text based on the user's input, location, and preferred writing style (R1.5). |
+| **R2.2** | **Picture Generation** | Gemini 3 Pro Image Preview generates **multiple picture patterns** based on the generated text (R2.1) and the selected art style (R1.5). |
 | **R2.3** | **Picture Patterns** | Generated image options must include different formats, such as a **4-Panel Comic Strip** and a **Colored Pencil/Sketch style**. |
 
 ### 3.3. Review, Learning, and Management (The Learning Loop)

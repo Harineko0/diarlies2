@@ -33,3 +33,12 @@ The design will be functional, stark, and structured, adhering to the following 
 | **Review Page** | **Editable Text Area (R3.1)** | Text area uses a distinctive thick, maybe double-layered border. Focus/Edit state is indicated by a jarring, high-contrast color flash or animation. |
 | **All Pages** | **Buttons (General)** | Large, rectangular buttons. Hover state must trigger an **instantaneous (no transition)** background color change to a highlight color. |
 | **All Pages** | **Loading** | Loading screens feature minimal graphics and **glitching monospaced text** (e.g., `// AWAITING GEMINI RESPONSE...`) rather than complex spinners. |
+
+## 4. Responsiveness, Accessibility, and States
+
+| Area | Requirement |
+| :--- | :--- |
+| **Responsive Layout** | All components adapt to mobile/tablet: stacked layouts, full-width inputs/buttons, map pins and borders remain thick/visible on small screens. |
+| **Map Accessibility** | Map controls and pins have ARIA labels; keyboard focus/arrow navigation works for selection; clear focus rings consistent with thick-border style. |
+| **Loading/Empty/Error States** | Dialogue/image steps show brutalist loading text; empty states use bordered containers with brief instructions; errors surface in high-contrast banners. |
+| **Slow Generation Notice** | If image generation exceeds 10s, display `Generation takes long time. Retry?` with a text-button that re-triggers the request. |

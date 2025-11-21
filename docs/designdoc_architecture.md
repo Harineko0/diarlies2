@@ -39,11 +39,12 @@ graph LR
 | Component | Key Responsibilities |
 | :--- | :--- |
 | **Next.js Frontend** | UI rendering, state management, i18n, theme management (Dark/Light), Google Maps integration (client-side location gathering). |
-| **Go Backend** | API routing, input validation, authentication (via better-auth), initiating AI Agent workflows, managing database transactions (read/write). |
+| **Go Backend** | API routing, input validation, authentication (via better-auth), initiating AI Agent workflows, managing database transactions (read/write), enforcing SLO-aware retries/fallbacks. |
 | **AI Agent Layer (Python ADK)** | **Workflow Orchestration (The Brain):** Manages multi-turn dialogue, prompt engineering using language and style data, calling multiple Gemini models, and managing image generation steps. |
 
 ## 3\. API Design Principles (Go Backend)
 
 * **RESTful Approach:** APIs will be designed following REST principles (e.g., `/api/v1/diaries`, `/api/v1/user/style`).
-* **Performance:** Go's concurrency will be leveraged, especially for endpoints that call the AI Agent, which may have higher latency. Asynchronous processing for image generation may be considered for future optimization.
-* **Security:** All endpoints must be secured via the better-auth layer. Input data must be strictly validated before transmission to the AI Agent or database.
+* **Performance/SLOs:** Go's concurrency will be leveraged, especially for endpoints that call the AI Agent, which may have higher latency. Text generation targets 3s SLO; image generation targets 10s SLO. If image generation exceeds 10s, the backend returns a "long-running" state so the frontend can show `Generation takes long time. Retry?` with a text-button trigger to re-request.
+* **Error Handling:** On Gemini or agent errors, return friendly error payloads; retry once where idempotent. If style data is missing, skip priming and proceed with defaults, but log the miss.
+* **Security/Networking:** All endpoints are secured via better-auth. Services use service accounts with least privilege and private networking (Cloud Run with VPC connector to Cloud SQL private IP; agent service likewise) to reach SQL/Storage. Signed URLs are short-lived for media access.

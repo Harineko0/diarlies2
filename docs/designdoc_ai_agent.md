@@ -12,7 +12,7 @@ The AI Agent orchestrates the entire diary creation process (R2.1, R2.2), ensuri
 3.  **Dialogue/Input:** Agent uses **Gemini 2.5 Flash** with the retrieved style constraints to conduct interactive dialogue and gather detailed event data.
 4.  **Text Generation:** Agent constructs the final prompt, injecting style fragments and constraint instructions (R4.3: "Generate text in {language_code}"), and requests the final diary draft.
 5.  **Image Prompt Engineering:** Agent translates the generated text into detailed image prompts, strictly adhering to the user's `art_style` (R1.5) and the required patterns (4-panel comic).
-6.  **Image Generation:** Agent calls **Gemini 3 Pro Image Preview** to generate multiple options, saving results to Cloud Storage (R2.2, R3.4).
+6.  **Image Generation:** Agent calls **Gemini 3 Pro Image Preview** to generate multiple options, saving results to Cloud Storage (R2.2, R3.4). Target SLO is 10 seconds; if exceeded, the agent marks the request as long-running so the frontend can show `Generation takes long time. Retry?` with a text-button to retry.
 
 ## 2. User Style Learning Mechanism
 
@@ -30,3 +30,10 @@ All interaction and generation must align with the user's stored `language_code`
 
 * **Frontend:** The UI displays strings based on the `language_code` (R4.2).
 * **AI Agent:** Every single call to Gemini 2.5 Flash and every prompt to Gemini 3 Pro Image Preview must include a hard constraint specifying the target `language_code` (R4.3).
+
+## 4. Reliability and Error Handling
+
+* **Text SLO:** Target completion under 3 seconds; if exceeded, return partial progress status to backend (no frontend retry UI required).
+* **Image SLO:** Target 10 seconds; if breached, return "long-running" status so UI can prompt retry. Backend/agent must dedupe repeated retry requests to avoid duplicate image jobs/charges.
+* **Style Data Miss:** If no `user_style_data` rows for the `(user_id, language_code)` pair, proceed without priming but log the miss.
+* **Gemini/Tool Errors:** Retry once on transient errors; otherwise forward a friendly, localized error message to the backend for display.

@@ -4,7 +4,7 @@ This repo uses GitHub Actions for checks and Google managed services for deploym
 
 ## Web (Next.js) on Google Cloud
 1. **Build artifact with Cloud Build**  
-   - Create a `cloudbuild.yaml` that runs `pnpm install` and `pnpm build` in `apps/web`.  
+   - Steps: `pnpm install`, `pnpm lint`, `pnpm test -- --runInBand`, `pnpm build` in `apps/web`.  
    - Set build steps to output the `.next` standalone artifacts or a Docker image.
 2. **Deploy to App Hosting or Cloud Run**  
    - For Google App Hosting (preview), point the repo to the `apps/web` path and provide build commands above.  
@@ -14,7 +14,7 @@ This repo uses GitHub Actions for checks and Google managed services for deploym
    - Mount secrets via Cloud Run or App Hosting runtime configuration.
 
 ## Backend (Go) on Cloud Run
-1. **Build**: Cloud Build step `gcr.io/cloud-builders/go` with `GO111MODULE=on go build ./cmd/api`.  
+1. **Build/test**: Cloud Build step `gcr.io/cloud-builders/go` running `go test ./...` then `GO111MODULE=on go build ./cmd/api`.  
 2. **Containerize**: Multi-stage Dockerfile suggested: `golang:1.22` builder → `gcr.io/distroless/base-debian12` runtime.  
 3. **Deploy**: Use Cloud Run deploy step with proper region and service name.  
 4. **Infra**: Point traffic through HTTPS load balancer if needed; wire in VPC connectors when required.
@@ -28,6 +28,7 @@ This repo uses GitHub Actions for checks and Google managed services for deploym
    - `terraform validate`  
    - `terraform plan -out=tfplan` (optionally gated on PR approvals)  
    - `terraform apply tfplan` on main/prod promotions.
+   - Optional: `tflint`/`tfsec` for policy/vuln scan.
 
 ## Firebase Hosting
 1. **Service account token**: Create a Firebase deploy SA; grant `roles/firebasehosting.admin`. Store its token or key in Secret Manager.  
@@ -38,4 +39,5 @@ This repo uses GitHub Actions for checks and Google managed services for deploym
 - Use separate projects/environments (dev/stage/prod) and map branches to triggers.  
 - Enforce branch protections requiring GitHub Actions checks to pass before merge.  
 - Keep `FIREBASE_TOKEN`, `GOOGLE_APPLICATION_CREDENTIALS`, and other secrets in GitHub Actions secrets (or OIDC to workload identity federation) instead of committing keys.  
-- Once Cloud Build/App Hosting is wired, you can keep GitHub Actions as fast feedback while Google handles deployment.
+- Once Cloud Build/App Hosting is wired, you can keep GitHub Actions as fast feedback while Google handles deployment.  
+- Add lightweight vuln scanning per language (`npm audit --production` or `pnpm audit --prod`, `govulncheck` for Go) before deploy.
