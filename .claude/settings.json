@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(make:*)",
+      "Bash(go*)",
+      "Bash(pnpm*)",
+      "Edit(./**)",
+      "Write(./**)"
+    ],
+    "deny": [
+      "Read(./.env*)"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "uvx"
+  ]
+}
