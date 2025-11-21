@@ -1,0 +1,30 @@
+name: Firebase Dry-Run
+
+on:
+  push:
+    paths:
+      - "apps/firebase/**"
+      - ".github/workflows/firebase.yml"
+  pull_request:
+    paths:
+      - "apps/firebase/**"
+      - ".github/workflows/firebase.yml"
+
+jobs:
+  firebase-dry-run:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/firebase
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+      - name: Hosting deploy dry-run
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: firebase deploy --only hosting --dry-run --non-interactive

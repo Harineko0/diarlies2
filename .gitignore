@@ -1,0 +1,25 @@
+# Node / Next.js
+node_modules
+.next
+.turbo
+.vercel
+
+# Go
+bin/
+dist/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+crash.log
+
+# Firebase
+.firebase/
+firebase-debug.log
+
+# General
+.DS_Store
+*.env
+*.env.local
+*.log
