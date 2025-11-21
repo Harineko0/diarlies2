@@ -4,11 +4,13 @@
       "Bash(make:*)",
       "Bash(go *)",
       "Bash(pnpm *)",
-      "Edit(./**)",
-      "Write(./**)"
+      "Edit(*)",
+      "Write(*)"
     ],
     "deny": [
-      "Read(./.env*)"
+      "Read(./**/.env*)",
+      "Edit(./**/.env*)",
+      "Write(./**/.env*)"
     ]
   },
   "enableAllProjectMcpServers": true,

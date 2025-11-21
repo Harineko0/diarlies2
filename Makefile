@@ -1,4 +1,11 @@
-.PHONY: help install dev test lint format build clean ci
+.PHONY: help install dev test lint format build clean ci \
+	install-agent dev-agent test-agent lint-agent format-agent build-agent ci-agent \
+	clean-agent install-web install-backend install-terraform dev-web dev-backend \
+	test-web test-web-watch test-backend test-backend-verbose \
+	lint-web lint-backend lint-terraform format-web format-backend format-terraform \
+	build-web build-backend tf-validate tf-plan tf-apply firebase-deploy \
+	firebase-deploy-hosting firebase-deploy-rules ci-web ci-backend ci-terraform \
+	clean-web clean-backend clean-terraform
 .DEFAULT_GOAL := help
 
 # Colors for output
@@ -16,7 +23,7 @@ help: ## Display this help message
 
 ##@ Installation
 
-install: install-web install-backend ## Install all dependencies
+install: install-web install-backend install-agent ## Install all dependencies
 	@echo "$(GREEN)✓ All dependencies installed$(RESET)"
 
 install-web: ## Install web (Next.js) dependencies
@@ -30,6 +37,10 @@ install-backend: ## Install backend (Go) dependencies
 install-terraform: ## Initialize Terraform
 	@echo "$(BLUE)Initializing Terraform...$(RESET)"
 	@cd apps/terraform && terraform init -backend=false
+
+install-agent: ## Install agent (uv) dependencies
+	@echo "$(BLUE)Installing agent dependencies...$(RESET)"
+	@cd apps/agent && uv sync --all-groups
 
 ##@ Development
 
@@ -45,10 +56,15 @@ dev: ## Start all development servers (requires multiple terminals)
 	@echo "$(YELLOW)Note: This requires running in separate terminals$(RESET)"
 	@echo "  Terminal 1: make dev-web"
 	@echo "  Terminal 2: make dev-backend"
+	@echo "  Terminal 3: make dev-agent (optional)"
+
+dev-agent: ## Run agent CLI (Google ADK)
+	@echo "$(BLUE)Starting agent CLI...$(RESET)"
+	@cd apps/agent && uv run adk run agents/hello
 
 ##@ Testing
 
-test: test-web test-backend ## Run all tests
+test: test-web test-backend test-agent ## Run all tests
 	@echo "$(GREEN)✓ All tests passed$(RESET)"
 
 test-web: ## Run web tests
@@ -65,9 +81,13 @@ test-backend: ## Run backend tests
 test-backend-verbose: ## Run backend tests with verbose output
 	@cd apps/backend && go test -v ./...
 
+test-agent: ## Run agent tests
+	@echo "$(BLUE)Running agent tests...$(RESET)"
+	@cd apps/agent && uv run pytest
+
 ##@ Code Quality
 
-lint: lint-web lint-backend lint-terraform ## Run all linters
+lint: lint-web lint-backend lint-terraform lint-agent ## Run all linters
 	@echo "$(GREEN)✓ All linting passed$(RESET)"
 
 lint-web: ## Lint web code
@@ -88,7 +108,11 @@ lint-terraform: ## Check Terraform formatting
 	@echo "$(BLUE)Checking Terraform format...$(RESET)"
 	@cd apps/terraform && terraform fmt -check -recursive
 
-format: format-web format-backend format-terraform ## Format all code
+lint-agent: ## Lint agent (ruff)
+	@echo "$(BLUE)Linting agent...$(RESET)"
+	@cd apps/agent && uv run ruff check .
+
+format: format-web format-backend format-terraform format-agent ## Format all code
 	@echo "$(GREEN)✓ All code formatted$(RESET)"
 
 format-web: ## Format web code
@@ -103,9 +127,13 @@ format-terraform: ## Format Terraform files
 	@echo "$(BLUE)Formatting Terraform...$(RESET)"
 	@cd apps/terraform && terraform fmt -recursive
 
+format-agent: ## Format check agent (black --check)
+	@echo "$(BLUE)Checking agent formatting...$(RESET)"
+	@cd apps/agent && uv run black --check .
+
 ##@ Build
 
-build: build-web build-backend ## Build all applications
+build: build-web build-backend build-agent ## Build all applications
 	@echo "$(GREEN)✓ All applications built$(RESET)"
 
 build-web: ## Build web application
@@ -116,6 +144,10 @@ build-backend: ## Build backend binary
 	@echo "$(BLUE)Building backend...$(RESET)"
 	@cd apps/backend && go build -o ../../bin/api ./cmd/api
 	@echo "$(GREEN)✓ Binary created at bin/api$(RESET)"
+
+build-agent: ## Build agent package (uv)
+	@echo "$(BLUE)Building agent...$(RESET)"
+	@cd apps/agent && uv build
 
 ##@ Terraform
 
@@ -151,7 +183,7 @@ firebase-deploy-rules: ## Deploy only Firestore rules
 
 ##@ CI/CD
 
-ci: ci-web ci-backend ci-terraform ## Run all CI checks locally
+ci: ci-web ci-backend ci-terraform ci-agent ## Run all CI checks locally
 	@echo "$(GREEN)✓ All CI checks passed$(RESET)"
 
 ci-web: ## Run web CI checks (lint, format, test, build)
@@ -181,9 +213,18 @@ ci-terraform: ## Run Terraform CI checks (fmt, validate)
 		terraform init -backend=false && \
 		terraform validate
 
+ci-agent: ## Run agent CI checks (lint, format check, test, build)
+	@echo "$(BLUE)Running agent CI checks...$(RESET)"
+	@cd apps/agent && \
+		uv sync --all-groups && \
+		uv run ruff check . && \
+		uv run black --check . && \
+		uv run pytest && \
+		uv build
+
 ##@ Cleanup
 
-clean: clean-web clean-backend clean-terraform ## Clean all build artifacts
+clean: clean-web clean-backend clean-terraform clean-agent ## Clean all build artifacts
 	@echo "$(GREEN)✓ All artifacts cleaned$(RESET)"
 
 clean-web: ## Clean web build artifacts
@@ -198,6 +239,10 @@ clean-backend: ## Clean backend build artifacts
 clean-terraform: ## Clean Terraform files
 	@echo "$(BLUE)Cleaning Terraform...$(RESET)"
 	@cd apps/terraform && rm -rf .terraform .terraform.lock.hcl
+
+clean-agent: ## Clean agent build artifacts (keeps .venv)
+	@echo "$(BLUE)Cleaning agent artifacts...$(RESET)"
+	@cd apps/agent && rm -rf dist/ .pytest_cache
 
 clean-all: clean ## Clean everything including dependencies
 	@echo "$(BLUE)Deep cleaning...$(RESET)"
