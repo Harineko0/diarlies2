@@ -5,6 +5,8 @@ on:
     paths:
       - "apps/agent/**"
       - ".github/workflows/agent.yml"
+    branches:
+      - main
   pull_request:
     paths:
       - "apps/agent/**"

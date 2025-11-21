@@ -8,7 +8,7 @@
 - Make entrypoint: `make help` lists tasks. Common: `make dev-web` / `make dev-backend`; `make test`, `make lint`, `make format`, `make build`, `make ci`.
 - Web: `cd apps/web && pnpm dev` (local), `pnpm build && pnpm start` (prod), `pnpm lint`, `pnpm format` / `pnpm format:check`, `pnpm test` or `pnpm test:watch`.
 - Backend: `cd apps/backend && go run ./cmd/api` (API `/healthz`, `PORT` overrides 8080), `go test ./...`; `make build-backend` writes `bin/api`.
-- Agent: `cd apps/agent && uv sync --all-groups` then `uv run adk run agents/hello` (CLI) or `uv run adk web agents/hello --port 8080`; lint with `uv run ruff check .`, format check with `uv run black --check .`, tests via `uv run pytest`, build via `uv build`.
+- Agent: `cd apps/agent && uv sync --all-groups` then `uv run adk run agents/hello` (CLI) or `uv run adk web agents/hello --port 8080`; lint with `uv run ruff check .`, format check with `uv run black --check .`, tests via `uv run pytest`, build via `uv build`. Make equivalents: `make dev-agent`, `make lint-agent`, `make format-agent`, `make test-agent`, `make build-agent`, `make ci-agent`.
 - Infra: Terraform `cd apps/terraform && terraform init -backend=false` for local, `terraform plan` before apply (see `make tf-*` helpers). Firebase: `cd apps/firebase && firebase use --add`; deploy with `make firebase-deploy`.
 
 ## Coding Style & Naming Conventions

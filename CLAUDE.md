@@ -73,9 +73,7 @@ make install-terraform   # Initialize Terraform (without backend config)
 make dev-web             # Start Next.js dev server (localhost:3000)
 make dev-backend         # Start Go API server (localhost:8080)
 make dev                 # Instructions for running both (requires 2 terminals)
-# Agent (run from apps/agent)
-#   uv sync --all-groups
-#   uv run adk run agents/hello
+make dev-agent           # Run agent CLI (uv run adk run agents/hello)
 ```
 
 ### Testing
@@ -85,8 +83,7 @@ make test-web            # Run web tests only
 make test-web-watch      # Run web tests in watch mode
 make test-backend        # Run backend tests
 make test-backend-verbose # Run backend tests with -v flag
-# Agent tests (from apps/agent)
-#   uv run pytest
+make test-agent          # Run agent tests (uv run pytest)
 ```
 
 ### Code Quality
@@ -95,14 +92,13 @@ make lint                # Lint all code (web + backend + terraform)
 make lint-web            # Lint web with Biome
 make lint-backend        # Check gofmt + go vet
 make lint-terraform      # Check terraform fmt
-# Agent lint/format (from apps/agent)
-#   uv run ruff check .
-#   uv run black --check .
+make lint-agent          # Lint agent (uv run ruff check .)
 
 make format              # Format all code (web + backend + terraform)
 make format-web          # Format web with Biome
 make format-backend      # Format backend with gofmt
 make format-terraform    # Format terraform files
+make format-agent        # Format-check agent (uv run black --check .)
 ```
 
 ### Build
@@ -110,8 +106,7 @@ make format-terraform    # Format terraform files
 make build               # Build all applications
 make build-web           # Build Next.js production bundle
 make build-backend       # Build Go binary to bin/api
-# Agent build (from apps/agent)
-#   uv build
+make build-agent         # Build agent package (uv build)
 ```
 
 ### CI/CD
@@ -157,7 +152,7 @@ To replicate GitHub Actions checks before pushing:
 
 ```bash
 make ci                  # Runs lint, format check, tests, and build for all apps
-# Agent CI equivalent (from apps/agent): uv sync --all-groups && uv run ruff check . && uv run black --check . && uv run pytest && uv build
+make ci-agent            # Agent CI (uv sync + ruff + black --check + pytest + uv build)
 ```
 
 Or run checks for individual apps:
