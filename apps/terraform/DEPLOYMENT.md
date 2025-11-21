@@ -7,7 +7,7 @@ This guide covers deploying infrastructure using the GitHub Actions workflow wit
 1. **GCP Project** with billing enabled
 2. **GitHub Repository** with Actions enabled
 3. **Local Development Environment**:
-   - Terraform >= 1.6.0
+   - Terraform >= 1.5.0
    - `gcloud` CLI authenticated
    - Sufficient GCP permissions (Owner or Editor role)
 
