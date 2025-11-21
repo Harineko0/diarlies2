@@ -7,6 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Diarlies is an AI-powered diary companion monorepo with multiple apps:
 - **apps/web**: Next.js 14 (App Router) frontend with TypeScript, React Testing Library, and Vitest
 - **apps/backend**: Go 1.22 HTTP API using chi router
+- **apps/agent**: Google ADK Python agent (uv-managed)
 - **apps/terraform**: Google Cloud infrastructure provisioning
 - **apps/firebase**: Firebase project configuration (Firestore rules, hosting)
 
@@ -35,6 +36,12 @@ This is a pnpm workspace with apps managed independently under `apps/`.
 - Uses environment variable `PORT` (defaults to 8080)
 - Chi middleware: RequestID, RealIP, Logger, Recoverer, Timeout
 
+### Agent (Google ADK, Python)
+- ADK agent code lives under `apps/agent/agents/**` with `root_agent` defined in each agent module
+- Managed with `uv`; dependencies in `pyproject.toml`, lock in `uv.lock`
+- Dev commands (from `apps/agent`): `uv sync --all-groups`, `uv run adk run agents/hello`, `uv run adk web agents/hello --port 8080`
+- Quality/build: `uv run ruff check .`, `uv run black --check .`, `uv run pytest`, `uv build`
+
 ### Infrastructure
 - Terraform targets Google Cloud Platform (not AWS/Azure)
 - Basic VPC networking setup in `apps/terraform/main.tf`
@@ -43,9 +50,10 @@ This is a pnpm workspace with apps managed independently under `apps/`.
 
 ### CI/CD Strategy
 - GitHub Actions for PR checks (lint, test, build)
-- Path-based triggers: changes to `apps/web/**`, `apps/backend/**`, etc.
+- Path-based triggers: changes to `apps/web/**`, `apps/backend/**`, `apps/agent/**`, etc.
 - Production deployment via Google Cloud Build / App Hosting (see docs/ci-cd.md)
 - State management: Terraform remote state in GCS bucket
+- Agent workflow: `.github/workflows/agent.yml` (uv sync → ruff → black --check → pytest → uv build)
 
 ## Common Commands
 
@@ -65,6 +73,9 @@ make install-terraform   # Initialize Terraform (without backend config)
 make dev-web             # Start Next.js dev server (localhost:3000)
 make dev-backend         # Start Go API server (localhost:8080)
 make dev                 # Instructions for running both (requires 2 terminals)
+# Agent (run from apps/agent)
+#   uv sync --all-groups
+#   uv run adk run agents/hello
 ```
 
 ### Testing
@@ -74,6 +85,8 @@ make test-web            # Run web tests only
 make test-web-watch      # Run web tests in watch mode
 make test-backend        # Run backend tests
 make test-backend-verbose # Run backend tests with -v flag
+# Agent tests (from apps/agent)
+#   uv run pytest
 ```
 
 ### Code Quality
@@ -82,6 +95,9 @@ make lint                # Lint all code (web + backend + terraform)
 make lint-web            # Lint web with Biome
 make lint-backend        # Check gofmt + go vet
 make lint-terraform      # Check terraform fmt
+# Agent lint/format (from apps/agent)
+#   uv run ruff check .
+#   uv run black --check .
 
 make format              # Format all code (web + backend + terraform)
 make format-web          # Format web with Biome
@@ -94,6 +110,8 @@ make format-terraform    # Format terraform files
 make build               # Build all applications
 make build-web           # Build Next.js production bundle
 make build-backend       # Build Go binary to bin/api
+# Agent build (from apps/agent)
+#   uv build
 ```
 
 ### CI/CD
@@ -139,6 +157,7 @@ To replicate GitHub Actions checks before pushing:
 
 ```bash
 make ci                  # Runs lint, format check, tests, and build for all apps
+# Agent CI equivalent (from apps/agent): uv sync --all-groups && uv run ruff check . && uv run black --check . && uv run pytest && uv build
 ```
 
 Or run checks for individual apps:

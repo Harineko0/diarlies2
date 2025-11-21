@@ -1,13 +1,14 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-- Monorepo lives under `apps/`: `apps/web` (Next.js + TypeScript), `apps/backend` (Go 1.22 + chi), `apps/terraform` (GCP infra), `apps/firebase` (rules/indexes/config). Keep module-specific assets and configs inside each folder.
-- Web routes/components stay in `apps/web/app`; backend entrypoint is `apps/backend/cmd/api/main.go`. Add future shared types under a `packages/` folder when needed.
+- Monorepo lives under `apps/`: `apps/web` (Next.js + TypeScript), `apps/backend` (Go 1.22 + chi), `apps/agent` (Google ADK Python, uv-managed), `apps/terraform` (GCP infra), `apps/firebase` (rules/indexes/config). Keep module-specific assets and configs inside each folder.
+- Web routes/components stay in `apps/web/app`; backend entrypoint is `apps/backend/cmd/api/main.go`; agent entrypoint lives under `apps/agent/agents/**` with `root_agent` defined; add future shared types under a `packages/` folder when needed.
 
 ## Build, Test, and Development Commands
 - Make entrypoint: `make help` lists tasks. Common: `make dev-web` / `make dev-backend`; `make test`, `make lint`, `make format`, `make build`, `make ci`.
 - Web: `cd apps/web && pnpm dev` (local), `pnpm build && pnpm start` (prod), `pnpm lint`, `pnpm format` / `pnpm format:check`, `pnpm test` or `pnpm test:watch`.
 - Backend: `cd apps/backend && go run ./cmd/api` (API `/healthz`, `PORT` overrides 8080), `go test ./...`; `make build-backend` writes `bin/api`.
+- Agent: `cd apps/agent && uv sync --all-groups` then `uv run adk run agents/hello` (CLI) or `uv run adk web agents/hello --port 8080`; lint with `uv run ruff check .`, format check with `uv run black --check .`, tests via `uv run pytest`, build via `uv build`.
 - Infra: Terraform `cd apps/terraform && terraform init -backend=false` for local, `terraform plan` before apply (see `make tf-*` helpers). Firebase: `cd apps/firebase && firebase use --add`; deploy with `make firebase-deploy`.
 
 ## Coding Style & Naming Conventions

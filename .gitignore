@@ -3,6 +3,8 @@ node_modules
 .next
 .turbo
 .vercel
+.venv/
+.python-version
 
 # Go
 bin/
