@@ -5,6 +5,8 @@ on:
     paths:
       - "apps/terraform/**"
       - ".github/workflows/terraform.yml"
+    branches:
+      - main
   pull_request:
     paths:
       - "apps/terraform/**"

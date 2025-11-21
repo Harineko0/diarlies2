@@ -5,6 +5,8 @@ on:
     paths:
       - "apps/firebase/**"
       - ".github/workflows/firebase.yml"
+    branches:
+      - main
   pull_request:
     paths:
       - "apps/firebase/**"
