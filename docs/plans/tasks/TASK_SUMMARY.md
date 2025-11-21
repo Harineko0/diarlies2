@@ -321,7 +321,7 @@ Backend API + Auth (6-8)
 
 1. **Start with Phase 1** (Infrastructure):
    ```bash
-   cd /Users/hari/proj/diarlies2/docs/plans/tasks
+   cd docs/plans/tasks
    cat diarlies-mvp-task-01.md
    ```
 
