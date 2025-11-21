@@ -1,35 +1,35 @@
 {
-  "name": "diarlies-web",
-  "version": "0.1.0",
-  "private": true,
-  "packageManager": "pnpm@9.1.0",
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "biome lint .",
-    "format:check": "biome format --write=false .",
-    "format": "biome format .",
-    "test": "vitest run",
-    "test:watch": "vitest"
-  },
-  "dependencies": {
-    "next": "14.2.3",
-    "react": "18.3.1",
-    "react-dom": "18.3.1"
-  },
-  "devDependencies": {
-    "@types/node": "^20.12.12",
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
-    "eslint": "^8.57.0",
-    "eslint-config-next": "14.2.3",
-    "typescript": "^5.4.5",
-    "@biomejs/biome": "^1.7.2",
-    "@testing-library/jest-dom": "^6.4.5",
-    "@testing-library/react": "^14.3.1",
-    "@vitejs/plugin-react": "^4.3.1",
-    "jsdom": "^24.0.0",
-    "vitest": "^1.5.0"
-  }
+	"name": "diarlies-web",
+	"version": "0.1.0",
+	"private": true,
+	"packageManager": "pnpm@9.1.0",
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start",
+		"lint": "biome lint .",
+		"format:check": "biome format .",
+		"format": "biome format --write .",
+		"test": "vitest run",
+		"test:watch": "vitest"
+	},
+	"dependencies": {
+		"next": "14.2.3",
+		"react": "18.3.1",
+		"react-dom": "18.3.1"
+	},
+	"devDependencies": {
+		"@types/node": "^20.12.12",
+		"@types/react": "^18.3.3",
+		"@types/react-dom": "^18.3.0",
+		"eslint": "^8.57.0",
+		"eslint-config-next": "14.2.3",
+		"typescript": "^5.4.5",
+		"@biomejs/biome": "^1.7.2",
+		"@testing-library/jest-dom": "^6.4.5",
+		"@testing-library/react": "^14.3.1",
+		"@vitejs/plugin-react": "^4.3.1",
+		"jsdom": "^24.0.0",
+		"vitest": "^1.5.0"
+	}
 }
