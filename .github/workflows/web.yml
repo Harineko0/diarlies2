@@ -6,6 +6,8 @@ on:
       - "apps/web/**"
       - ".github/workflows/web.yml"
       - "pnpm-workspace.yaml"
+    branches:
+      - main
   pull_request:
     paths:
       - "apps/web/**"
