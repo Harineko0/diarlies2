@@ -23,7 +23,7 @@ jobs:
       TF_INPUT: false
       TF_VAR_project_id: example-project
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
